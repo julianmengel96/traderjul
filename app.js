@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const https = require('https');
 
 const fs = require('fs');
 
@@ -39,6 +40,11 @@ app.get("/", function(req, res) {
        high: high,
        low: low
    }});
+});
+
+app.get("/ping", function(req, res) {
+   console.log("tes");
+   res.json({});
 });
 
 // catch 404 and forward to error handler
@@ -133,5 +139,27 @@ binance.websockets.trades('ETHUSDT', (trades) => {
       low = lastPrice/start;
   }
 });
+
+function pingMe() {
+    https.get('https://ruddy-oval-beast.glitch.me/ping', (resp) => {
+  let data = '';
+
+  // A chunk of data has been received.
+  resp.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  // The whole response has been received. Print out the result.
+  resp.on('end', () => {
+    console.log(JSON.parse(data).explanation);
+      setTimeout(pingMe, 60000*3);
+  });
+
+}).on("error", (err) => {
+  console.log("Error: " + err.message);
+});
+  
+}
+setTimeout(pingMe, 60000*3);
 
 module.exports = app;
