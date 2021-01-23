@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to TraderJul
+  p Money: #{stats.money}
+  p Change: #{stats.current}
+  p high: #{stats.high}
+  p low: #{stats.low}
+  ul
+    each trade in stats.tradeArray
+      li=trade
